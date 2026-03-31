@@ -1,7 +1,11 @@
 ffmpeg
 libgl1
-libegl-mesa0
+libegl1
 libxrandr2
 libxinerama1
 libxcursor1
 libxi6
+libfontconfig1
+libxrender1
+libxext6
+libgbm1
