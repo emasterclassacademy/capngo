@@ -33,6 +33,11 @@ st.markdown("""
 [data-testid="stDecoration"],
 [data-testid="stHeader"],
 header[data-testid="stHeader"] { display: none !important; }
+/* Hide Streamlit footer / manage app button */
+[data-testid="manage-app-button"],
+footer,
+footer *,
+[data-testid="stStatusWidget"] { display: none !important; }
 
 :root {
     --bg:       #09090f;
