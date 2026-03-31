@@ -1,0 +1,8 @@
+streamlit
+pycaps
+stable-ts
+groq
+cryptography
+google-api-python-client
+google-auth
+google-auth-oauthlib
