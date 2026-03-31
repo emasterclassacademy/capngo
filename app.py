@@ -33,17 +33,6 @@ st.markdown("""
 [data-testid="stDecoration"],
 [data-testid="stHeader"],
 header[data-testid="stHeader"] { display: none !important; }
-/* Hide Manage app button - aggressive */
-[data-testid="manage-app-button"],
-[data-testid="stActionButtonIcon"],
-[class*="manage-app"],
-[class*="manageApp"],
-[class*="StatusWidget"],
-[data-testid="stStatusWidget"],
-footer,
-footer *,
-#MainMenu,
-#MainMenu * { display: none !important; visibility: hidden !important; }
 
 :root {
     --bg:       #09090f;
