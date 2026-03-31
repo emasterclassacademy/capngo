@@ -80,4 +80,4 @@ uharfbuzz==0.53.3
 uritemplate==4.2.0
 urllib3==2.6.3
 watchdog==6.0.0
-https://github.com/Zulko/pycaps/archive/refs/heads/main.zip
+git+https://github.com/Zulko/pycaps.git
