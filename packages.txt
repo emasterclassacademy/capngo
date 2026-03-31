@@ -1,4 +1,7 @@
+# Video support
 ffmpeg
+
+# OpenGL / rendering
 libgl1
 libegl1
 libxrandr2
@@ -9,3 +12,12 @@ libfontconfig1
 libxrender1
 libxext6
 libgbm1
+
+# Chromium / Playwright dependencies
+libnss3
+libatk1.0-0
+libatk-bridge2.0-0
+libpangocairo-1.0-0
+libpango-1.0-0
+libgtk-3-0
+wget  # needed for Playwright to download browser binaries
