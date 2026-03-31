@@ -1,0 +1,48 @@
+{
+    "css": "styles.css",
+    "resources": "resources",
+    "layout": {
+        "x_words_space": 5,
+        "y_words_space": 5,
+        "max_number_of_lines": 3,
+        "min_number_of_lines": 2,
+        "vertical_align": {
+            "align": "bottom",
+            "offset": -0.03
+        }
+    },
+    "whisper": {
+        "model": "base"
+    },
+    "splitters": [
+        {
+            "type": "limit_by_chars",
+            "min_chars": 30,
+            "max_chars": 40
+        }
+    ],
+    "effects": [
+        {
+            "type": "typewriting"
+        }
+    ],
+    "animations": [
+        {
+            "type": "slide_in_primitive",
+            "when": "narration-starts",
+            "what": "segment",
+            "duration": 0.3,
+            "direction": "up",
+            "distance": 50,
+            "transformer": "ease_out"
+        },
+        {
+            "type": "slide_out",
+            "when": "narration-ends",
+            "what": "segment",
+            "duration": 0.3,
+            "direction": "down"
+        }
+    ],
+    "tagger_rules": []
+}
