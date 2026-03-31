@@ -7,14 +7,6 @@ from playwright.sync_api import sync_playwright
 if not os.path.exists(os.path.expanduser("~/.cache/ms-playwright")):
     subprocess.run(["playwright", "install", "chromium"], check=True)
 
-# Use Playwright normally
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
-    page = browser.new_page()
-    page.goto("https://example.com")
-    st.write(page.title())
-    browser.close()
-
 import asyncio
 import sys
 
