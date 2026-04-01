@@ -627,7 +627,7 @@ with col_style:
         with adv1:
             st.slider("Font size (px)", 10, 48, st.session_state["s_fs"], key="s_fs")
             st.slider("Words per chunk", 1, 6, st.session_state["s_wpc"], key="s_wpc")
-            st.selectbox("Text case", ["uppercase", "none", "capitalize"],
+            st.selectbox("Text case", ["Uppercase", "None", "Capitalize"],
                          index=["uppercase", "none", "capitalize"].index(st.session_state["s_tt"]),
                          key="s_tt")
         with adv2:
