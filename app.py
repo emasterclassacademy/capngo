@@ -406,9 +406,10 @@ for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
 
-# Normalise s_tt — old sessions may have stored title-case values e.g. "Uppercase"
-if isinstance(st.session_state.get("s_tt"), str):
-    st.session_state["s_tt"] = st.session_state["s_tt"].lower()
+# Normalise string session state — old sessions may have stored title-case values
+for _k in ("s_tt", "s_va"):
+    if isinstance(st.session_state.get(_k), str):
+        st.session_state[_k] = st.session_state[_k].lower()
 
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
