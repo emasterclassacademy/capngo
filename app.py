@@ -393,6 +393,13 @@ defaults = {
     "generated_description":  "",
     "selected_title_idx":     0,
     "titles_generated":       False,
+    # Advanced setting defaults (populated on first load / template switch)
+    "cp1": "#777777", "cp2": "#FFFC00", "cp3": "#FFFC00",
+    "s_fs": 16, "s_fw": 900, "s_wpc": 3, "s_ml": 1,
+    "s_sk": 2, "s_as": 1.15, "s_ds": True,
+    "s_tt": "uppercase", "s_ff": "'Arial Black', Impact, sans-serif",
+    "s_va": "center", "s_vo": 0.2, "s_mw": 70,
+    "style_choice_radio": 2,
 }
 for k, v in defaults.items():
     if k not in st.session_state:
@@ -584,7 +591,7 @@ with col_style:
                 st.session_state.selected_template = key
                 st.rerun()
 
-    # Sync widget defaults when template changes
+    # Sync widget session state defaults when template changes
     if st.session_state.selected_template != st.session_state.get("_prev_template"):
         tpl = TEMPLATES[st.session_state.selected_template]
         st.session_state.update({
@@ -594,6 +601,7 @@ with col_style:
             "s_ds": tpl["drop_shadow"], "s_tt": tpl["text_transform"], "s_ff": tpl["font_family"],
             "s_va": tpl["vertical_align"], "s_vo": tpl["vertical_offset"],
             "s_mw": int(tpl["max_width_pct"] * 100),
+            "style_choice_radio": tpl["style_choice"],
         })
         st.session_state["_prev_template"] = st.session_state.selected_template
 
@@ -602,50 +610,66 @@ with col_style:
     with st.expander("⚙️  Advanced settings", expanded=False):
         st.markdown('<p class="adv-heading">Colours</p>', unsafe_allow_html=True)
         cc1, cc2, cc3 = st.columns(3)
-        with cc1: inactive_color  = st.color_picker("Inactive",  tpl["inactive_color"],  key="cp1")
-        with cc2: active_color    = st.color_picker("Active",    tpl["active_color"],    key="cp2")
-        with cc3: highlight_color = st.color_picker("Highlight", tpl["highlight_color"], key="cp3")
+        with cc1: st.color_picker("Inactive",  st.session_state["cp1"], key="cp1")
+        with cc2: st.color_picker("Active",    st.session_state["cp2"], key="cp2")
+        with cc3: st.color_picker("Highlight", st.session_state["cp3"], key="cp3")
 
         st.markdown('<p class="adv-heading">Animation style</p>', unsafe_allow_html=True)
-        style_choice = st.radio(
+        st.radio(
             "Animation", options=[1, 2, 3],
             format_func=lambda x: {1: "Highlight box", 2: "Colour pop", 3: "Glow"}[x],
-            index=tpl["style_choice"] - 1, horizontal=True, label_visibility="collapsed")
+            index=[1, 2, 3].index(st.session_state["style_choice_radio"]),
+            horizontal=True, label_visibility="collapsed",
+            key="style_choice_radio")
 
         st.markdown('<p class="adv-heading">Typography</p>', unsafe_allow_html=True)
         adv1, adv2, adv3 = st.columns(3)
         with adv1:
-            font_size           = st.slider("Font size (px)", 10, 48, tpl["font_size"], key="s_fs")
-            max_words_per_chunk = st.slider("Words per chunk", 1, 6, tpl["max_words_per_chunk"], key="s_wpc")
-            text_transform      = st.selectbox("Text case", ["Uppercase", "None", "Capitalize"],
-                                               index=["uppercase", "none", "capitalize"].index(tpl["text_transform"]), key="s_tt")
+            st.slider("Font size (px)", 10, 48, st.session_state["s_fs"], key="s_fs")
+            st.slider("Words per chunk", 1, 6, st.session_state["s_wpc"], key="s_wpc")
+            st.selectbox("Text case", ["uppercase", "none", "capitalize"],
+                         index=["uppercase", "none", "capitalize"].index(st.session_state["s_tt"]),
+                         key="s_tt")
         with adv2:
-            font_weight = st.selectbox("Font weight", [400, 700, 900],
-                                       index=[400, 700, 900].index(tpl["font_weight"]), key="s_fw")
-            max_lines   = st.slider("Max lines", 1, 4, tpl["max_lines"], key="s_ml")
-            font_family = st.text_input("Font family CSS", value=tpl["font_family"], key="s_ff")
+            st.selectbox("Font weight", [400, 700, 900],
+                         index=[400, 700, 900].index(st.session_state["s_fw"]),
+                         key="s_fw")
+            st.slider("Max lines", 1, 4, st.session_state["s_ml"], key="s_ml")
+            st.text_input("Font family CSS", value=st.session_state["s_ff"], key="s_ff")
         with adv3:
-            active_scale = st.slider("Active word scale", 1.0, 2.0, tpl["active_scale"], step=0.05, key="s_as")
-            stroke_size  = st.slider("Stroke width (px)", 0, 8, tpl["stroke_size"], key="s_sk")
-            drop_shadow  = st.checkbox("Drop shadow", value=tpl["drop_shadow"], key="s_ds")
+            st.slider("Active word scale", 1.0, 2.0, st.session_state["s_as"], step=0.05, key="s_as")
+            st.slider("Stroke width (px)", 0, 8, st.session_state["s_sk"], key="s_sk")
+            st.checkbox("Drop shadow", value=st.session_state["s_ds"], key="s_ds")
 
         st.markdown('<p class="adv-heading">Position</p>', unsafe_allow_html=True)
         pos1, pos2, pos3 = st.columns(3)
-        with pos1: vertical_align  = st.selectbox("Vertical", ["Bottom", "Center", "Top"],
-                                                   index=["bottom", "center", "top"].index(tpl["vertical_align"]), key="s_va")
-        with pos2: vertical_offset = st.slider("Offset", -1.0, 1.0, tpl["vertical_offset"], step=0.05, key="s_vo")
-        with pos3: max_width_pct   = st.slider("Max width %", 40, 100, int(tpl["max_width_pct"] * 100), key="s_mw") / 100
+        with pos1:
+            st.selectbox("Vertical", ["bottom", "center", "top"],
+                         index=["bottom", "center", "top"].index(st.session_state["s_va"]),
+                         key="s_va")
+        with pos2:
+            st.slider("Offset", -1.0, 1.0, st.session_state["s_vo"], step=0.05, key="s_vo")
+        with pos3:
+            st.slider("Max width %", 40, 100, st.session_state["s_mw"], key="s_mw")
 
-    # Fallback to template defaults when expander closed
-    if not st.session_state.get("_adv_open", False):
-        inactive_color = tpl["inactive_color"]; active_color = tpl["active_color"]
-        highlight_color = tpl["highlight_color"]; style_choice = tpl["style_choice"]
-        font_size = tpl["font_size"]; font_weight = tpl["font_weight"]
-        max_words_per_chunk = tpl["max_words_per_chunk"]; max_lines = tpl["max_lines"]
-        vertical_align = tpl["vertical_align"]; vertical_offset = tpl["vertical_offset"]
-        max_width_pct = tpl["max_width_pct"]; stroke_size = tpl["stroke_size"]
-        active_scale = tpl["active_scale"]; drop_shadow = tpl["drop_shadow"]
-        text_transform = tpl["text_transform"]; font_family = tpl["font_family"]
+    # ── FIX: Always read final values from session state ──────────────────────
+    inactive_color      = st.session_state["cp1"]
+    active_color        = st.session_state["cp2"]
+    highlight_color     = st.session_state["cp3"]
+    style_choice        = st.session_state["style_choice_radio"]
+    font_size           = st.session_state["s_fs"]
+    font_weight         = st.session_state["s_fw"]
+    max_words_per_chunk = st.session_state["s_wpc"]
+    max_lines           = st.session_state["s_ml"]
+    stroke_size         = st.session_state["s_sk"]
+    active_scale        = st.session_state["s_as"]
+    drop_shadow         = st.session_state["s_ds"]
+    text_transform      = st.session_state["s_tt"]
+    font_family         = st.session_state["s_ff"]
+    vertical_align      = st.session_state["s_va"]
+    vertical_offset     = st.session_state["s_vo"]
+    max_width_pct       = st.session_state["s_mw"] / 100
+    # ─────────────────────────────────────────────────────────────────────────
 
     # Reset state when a new video is uploaded
     if st.session_state.uploaded_video_prev != uploaded_video:
@@ -653,7 +677,7 @@ with col_style:
         st.session_state.titles_generated    = False
         st.session_state.suggested_titles    = []
         st.session_state.generated_description = ""
-        st.session_state.output_video_bytes  = None   # FIX 3: clear old video too
+        st.session_state.output_video_bytes  = None
     st.session_state.uploaded_video_prev = uploaded_video
 
     generate = st.button(
@@ -668,7 +692,7 @@ with col_style:
         st.session_state.titles_generated      = False
         st.session_state.suggested_titles      = []
         st.session_state.generated_description = ""
-        st.session_state.output_video_bytes    = None  # FIX 3: clear so loader shows
+        st.session_state.output_video_bytes    = None
 
 # ══════════════════════════════════════════════════════
 # COL 03 — PREVIEW
@@ -676,7 +700,6 @@ with col_style:
 with col_preview:
     st.markdown('<div class="panel-title">03 &nbsp; Preview</div>', unsafe_allow_html=True)
 
-    # FIX 3: show loader whenever is_generating, regardless of prior video
     if st.session_state.is_generating:
         st.markdown("""
         <div class="loading-box">
