@@ -398,12 +398,17 @@ defaults = {
     "s_fs": 16, "s_fw": 900, "s_wpc": 3, "s_ml": 1,
     "s_sk": 2, "s_as": 1.15, "s_ds": True,
     "s_tt": "uppercase", "s_ff": "'Arial Black', Impact, sans-serif",
+
     "s_va": "center", "s_vo": 0.2, "s_mw": 70,
     "style_choice_radio": 2,
 }
 for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
+
+# Normalise s_tt — old sessions may have stored title-case values e.g. "Uppercase"
+if isinstance(st.session_state.get("s_tt"), str):
+    st.session_state["s_tt"] = st.session_state["s_tt"].lower()
 
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────
@@ -627,7 +632,7 @@ with col_style:
         with adv1:
             st.slider("Font size (px)", 10, 48, st.session_state["s_fs"], key="s_fs")
             st.slider("Words per chunk", 1, 6, st.session_state["s_wpc"], key="s_wpc")
-            st.selectbox("Text case", ["Uppercase", "None", "Capitalize"],
+            st.selectbox("Text case", ["uppercase", "none", "capitalize"],
                          index=["uppercase", "none", "capitalize"].index(st.session_state["s_tt"]),
                          key="s_tt")
         with adv2:
